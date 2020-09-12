@@ -52,6 +52,6 @@ vector A( k ) ;
 cout << "Input the elements of vector A :\n" ; 
 cin >> A ; 
 cout << "Output the elements of vector A :\n" ; 
-cout << A ; 
-system("pause"); 
+ cout << A ; 
+ system("pause"); 
 }
