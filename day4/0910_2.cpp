@@ -40,7 +40,6 @@ int main(){
     else{
         printf("No\n");
     }
-
     system("pause"); 
     return 0; 
 }
