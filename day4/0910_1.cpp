@@ -58,7 +58,6 @@ int main()
     //c1=c1+c2
     c1.add_C1(c2);
     c1.print();
-
     //printf("c1:%d \n", sizeof(C1)); 
     system("pause"); 
 }
