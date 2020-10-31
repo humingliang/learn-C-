@@ -1,0 +1,155 @@
+#include<iostream>
+#include<string.h>
+#include<list>
+using namespace std;
+
+//行为型模式---->命令模式
+//使用一个专门的类对调用过程加以封装/command类
+//将请求封装为对象，用不同请求对客户端进行参数化，进行排队或记录请求日志。
+class Doctor{
+public:
+    void treat_eye(){
+        cout<<"treat eyes.\n";
+    }
+
+    void treat_nose(){
+        cout<<"treat nose.\n";
+    }
+};
+
+class Command{
+public:
+    virtual void treat() = 0;
+};
+
+class CommandTreatEye : public Command{
+public:
+    CommandTreatEye(Doctor* doctor){
+        m_doctor = doctor;
+    }
+
+    void treat(){
+        m_doctor->treat_eye();
+    }
+    
+private:
+    Doctor* m_doctor;
+};
+
+class CommandTreatNose : public Command{
+public:
+    CommandTreatNose(Doctor* doctor){
+        m_doctor = doctor;
+    }
+
+    void treat(){
+        m_doctor->treat_nose();
+    }
+    
+private:
+    Doctor* m_doctor;
+};
+
+class BeautyNurse{
+public:
+    BeautyNurse(Command* command){
+        this->m_command = command;
+    }
+
+    void SubmittedCase(){//提交病例- 下达命令
+        m_command->treat();
+    }
+private:
+    Command* m_command;
+};
+
+//护士长
+class HeadNurse{
+public:
+    HeadNurse(){
+        m_list.clear();
+    }
+
+public:
+    void setCommand(Command* command){
+        m_list.push_back(command);
+    }
+
+    void SubmittedCase(){//提交病例- 下达命令
+        for(list<Command*>::iterator it = m_list.begin();it != m_list.end();it++){
+            (*it)->treat();
+        }
+    }
+private:
+    list<Command*> m_list;
+};
+
+
+
+int main1(){
+    //1医生直接看病
+    Doctor* doctor = new Doctor;
+    doctor->treat_eye();
+    delete doctor;
+}
+
+int main2(){
+   //2通过一个命令
+    Doctor* doctor = new Doctor;
+    Command* command = new CommandTreatEye(doctor);
+    command->treat();
+    delete command;
+    delete doctor;
+}
+
+int main3(){
+   //3护士提交简历，医生看病
+    Doctor*       doctor    = NULL;
+    Command*      command   = NULL;
+    BeautyNurse*  beautynurse     = NULL;
+
+    doctor        = new Doctor;
+    //command       = new CommandTreatEye(doctor);
+    command       = new CommandTreatNose(doctor);
+    beautynurse   = new BeautyNurse(command);
+
+    beautynurse->SubmittedCase();
+
+    delete beautynurse;
+    delete command;
+    delete doctor;
+    return 0;
+}
+
+int main4(){
+   //护士长批量下达命令
+    Doctor*       doctor    = NULL;
+    Command*      command   = NULL;
+    Command*      command1  = NULL;
+    HeadNurse*    headnurse = NULL;
+
+    doctor        = new Doctor;
+    headnurse     = new HeadNurse;
+    command       = new CommandTreatEye(doctor);
+    command1      = new CommandTreatNose(doctor);
+    
+    headnurse->setCommand(command);
+    headnurse->setCommand(command1);
+    headnurse->SubmittedCase();//批量下达命令
+
+    delete headnurse;
+    delete command;
+    delete command1;
+    delete doctor;
+    return 0;
+}
+
+
+int main(){
+    //main1();
+    //main2();
+    //main3();
+    main4();
+    cout<<"hello..."<<endl;
+    return 0;
+}
