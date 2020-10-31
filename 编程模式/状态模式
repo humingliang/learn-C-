@@ -1,0 +1,96 @@
+#include<iostream>
+#include<string.h>
+#include<list>
+using namespace std;
+
+//行为型模式---->状态模式
+//通过状态改变当前对象行为
+class Worker;
+
+class State{
+public:
+    virtual void doSomeThing(Worker* w) = 0;
+};
+
+class Worker{
+private:
+    int m_hour;
+    State* m_currstate;
+
+public:
+    Worker();
+    
+    int getHour(){
+        return m_hour;
+    }
+
+    void setHour(int hour){
+        m_hour = hour;
+    }
+
+    State* getCurrentState(){
+        return m_currstate;
+    }
+
+    void setCurrentState(State* state){
+        m_currstate = state;
+    }
+
+    virtual void doSomeThing(){
+        m_currstate->doSomeThing(this);
+    }
+
+};
+
+class State1 : public State{
+public:
+    void doSomeThing(Worker* w);
+};
+
+class State2 : public State{
+public:
+    void doSomeThing(Worker* w){
+        if(w->getHour()==9||w->getHour()==10){
+            cout<<"go to school.\n";
+        }
+        else{
+            delete w->getCurrentState();
+            w->setCurrentState(new State1);
+            cout<<"now is "<<w->getHour()<<"-----"<<"Don't know the State."<<endl;
+        }
+    }
+};
+
+Worker::Worker(){
+    m_currstate = new State1;
+}
+
+void  State1::doSomeThing(Worker* w){
+        if(w->getHour()==7||w->getHour()==8){
+            cout<<"eat breakfast.\n";
+        }
+        else{
+            delete w->getCurrentState();
+            w->setCurrentState(new State2);
+            w->getCurrentState()->doSomeThing(w);
+        }
+    }
+
+int main(){
+
+    Worker* w1 = new Worker;
+    w1->setHour(7);
+    w1->doSomeThing();
+
+    w1->setHour(9);
+    w1->doSomeThing();
+
+    w1->setHour(11);
+    w1->doSomeThing();
+
+    delete w1;
+    
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
