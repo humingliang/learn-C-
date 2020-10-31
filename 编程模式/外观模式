@@ -1,0 +1,79 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//结构型模式---->外观模式
+//为子系统中统一一套接口，让子系统更加容易使用
+class SubSystemA{
+public:
+    void doThing(){
+        cout<<"SubSystemA run"<<endl;
+    }
+};
+
+class SubSystemB{
+public:
+    void doThing(){
+        cout<<"SubSystemB run"<<endl;
+    }
+};
+
+class SubSystemC{
+public:
+    void doThing(){
+        cout<<"SubSystemC run"<<endl;
+    }
+};
+
+class Faced{
+public:
+    Faced(){
+        sysA = new SubSystemA;
+        sysB = new SubSystemB;
+        sysC = new SubSystemC;
+    }
+    ~Faced(){
+        delete sysA;
+        delete sysB;
+        delete sysC;
+    }
+
+    void doThing(){
+        sysA->doThing();
+        sysB->doThing();
+        sysC->doThing();
+    }
+private:
+    SubSystemA* sysA;
+    SubSystemB* sysB;
+    SubSystemC* sysC;
+};
+
+int main1(){
+    SubSystemA* sysA = new SubSystemA;
+    SubSystemB* sysB = new SubSystemB;
+    SubSystemC* sysC = new SubSystemC;
+
+    sysA->doThing();
+    sysB->doThing();
+    sysC->doThing();
+
+    delete sysA;
+    delete sysB;
+    delete sysC;
+}
+
+
+int main2(){
+    Faced *f = new Faced;
+    f->doThing();
+    delete f;
+}
+
+
+int main(){
+    //main1();
+    main2();
+    cout<<"hello..."<<endl;
+    return 0;
+}
