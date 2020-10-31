@@ -1,0 +1,73 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//工厂模式
+class Fruit{
+public:
+    virtual void getFruit() = 0;
+};
+
+class Banana : public Fruit{
+public:
+    virtual void getFruit(){
+        cout<<"I'm banana.\n";
+    }
+};
+
+class Orange : public Fruit{
+public:
+    virtual void getFruit(){
+        cout<<"I'm orange.\n";
+    }
+};
+
+class Peach : public Fruit{
+public:
+    virtual void getFruit(){
+        cout<<"I'm peach.\n";
+    }
+};
+
+class AbvFactory{
+public:
+    virtual Fruit *CreateProduct() = 0;
+};
+
+
+class BananaFactory : public AbvFactory{
+public:
+    virtual Fruit *CreateProduct(){
+        return new Banana;
+    }
+};
+
+class OrangeFactory : public AbvFactory{
+public:
+    virtual Fruit *CreateProduct(){
+        return new Orange;
+    }
+};
+
+class PeachFactory : public AbvFactory{
+public:
+    virtual Fruit *CreateProduct(){
+        return new Peach;
+    }
+};
+
+int main(){
+    AbvFactory* factory = NULL;  
+    Fruit*      fruit   = NULL; 
+
+    //工厂生产橘子
+    factory = new PeachFactory;
+    fruit = factory->CreateProduct();
+    fruit->getFruit();
+
+    delete fruit;
+    delete factory;
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
