@@ -1,0 +1,69 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//结构型模式---->桥接模式
+class Engine{
+public:
+    virtual void LndtallEngine() = 0;
+};
+
+class cc4400: public Engine{
+public:
+    virtual void LndtallEngine(){
+        cout<<"l'm cc4400 engine--installed.\n";
+    }
+};
+
+class cc4500: public Engine{
+public:
+    virtual void LndtallEngine(){
+        cout<<"l'm cc4500 engine--installed.\n";
+    }
+};
+
+class Car{
+public:
+    Car(Engine* engine){
+        this->m_engine = engine;
+    }
+
+    virtual void inastallEngine() = 0;
+protected:
+    Engine* m_engine;
+};
+
+
+class BM5 : public Car{
+public:
+    BM5(Engine* engine):Car(engine){
+
+    }
+
+    virtual void inastallEngine(){
+        m_engine->LndtallEngine();
+    }
+};
+
+class BM6 : public Car{
+public:
+    BM6(Engine* engine):Car(engine){
+    }
+
+    virtual void inastallEngine(){
+        m_engine->LndtallEngine();
+    }
+};
+
+int main(){
+    Engine* engine = NULL;
+    BM6*    bm6    = NULL;
+
+    engine = new cc4500;
+    bm6    = new BM6(engine);
+    bm6->inastallEngine();
+
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
