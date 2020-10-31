@@ -1,0 +1,82 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//抽象工厂模式
+//可以生产产品组    
+class Fruit{
+public:
+    virtual void CreateFruit() = 0;
+};
+
+class AbvFactory{
+public:
+    virtual Fruit* CreateBanana() = 0;
+    virtual Fruit* CreateOrange() = 0;
+};
+
+class Banana : public Fruit{
+public:
+    virtual void CreateFruit(){
+        cout<<"I'm banana.\n";
+    }
+};
+
+class Orange : public Fruit{
+public:
+    virtual void CreateFruit(){
+        cout<<"I'm orange.\n";
+    }
+};
+
+class Peach : public Fruit{
+public:
+    virtual void CreateFruit(){
+        cout<<"I'm peach.\n";
+    }
+};
+
+
+class NorthFactory : public AbvFactory{
+public:
+    virtual Fruit* CreateBanana(){
+        return new Banana;
+    }
+
+    virtual Fruit* CreateOrange(){
+        return new Orange;
+    }
+};
+
+class SorthFactory : public AbvFactory{
+public:
+    virtual Fruit* CreateBanana(){
+        return new Banana;
+    }
+
+    virtual Fruit* CreateOrange(){
+        return new Peach;
+    }
+};
+
+
+
+
+int main(){
+    AbvFactory* factory = NULL;  
+    Fruit*      fruit   = NULL; 
+
+    //工厂生产橘子
+    factory = new SorthFactory;
+    fruit = factory->CreateBanana();
+    fruit->CreateFruit();
+    delete fruit;
+    
+    fruit = factory->CreateOrange();
+    fruit->CreateFruit();
+    delete fruit;
+    delete factory;
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
