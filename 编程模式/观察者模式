@@ -1,0 +1,73 @@
+#include<iostream>
+#include<string.h>
+#include<list>
+using namespace std;
+
+//行为型模式---->观察者模式
+//定义对象间一种一对多的关系，是的每一个对象改变状态，所有依赖对象都可以得到通知
+class Secretary;
+
+//观察者
+class Player_Observer{
+public:
+    Player_Observer(Secretary* secretary){
+        this->m_secretary = secretary;
+    }
+
+    void update(string action){
+
+        cout<<"action: "<<action<<endl;
+        cout<<"I'm worry.\n";
+    }
+
+private:
+    Secretary* m_secretary;
+};
+
+//秘书类
+class Secretary{
+public:
+    Secretary(){
+        m_list.clear();
+    }
+
+
+    void Notify(string info){
+        //给所有的观察者发送情报
+        for(list<Player_Observer*>::iterator it = m_list.begin();it != m_list.end();it++){
+            (*it)->update(info);
+        }
+    }
+
+    void setPlayer_Observer(Player_Observer* po){
+        m_list.push_back(po);
+    }
+
+private:
+    list<Player_Observer*> m_list;
+};
+
+
+int main(){
+
+    Secretary*          secretary   = NULL;
+    Player_Observer*    po1         = NULL;
+    Player_Observer*    po2         = NULL;
+    
+    secretary = new Secretary;
+    po1 = new Player_Observer(secretary);
+    po2 = new Player_Observer(secretary);
+
+    secretary->setPlayer_Observer(po1);
+    secretary->setPlayer_Observer(po2);
+
+    secretary->Notify("the boss comes in");
+    secretary->Notify("the boss leaves");
+    
+    delete po2;
+    delete po1;
+    delete secretary;
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
