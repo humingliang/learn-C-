@@ -1,0 +1,121 @@
+#include<iostream>
+#include<string.h>
+#include<list>
+using namespace std;
+
+//行为型模式---->访问者模式
+//使数据结构和数据结构的操作解耦合
+class ParkElement;
+
+class Visitor{
+public:
+    virtual void visit(ParkElement* parkmlement) = 0;
+};
+
+class ParkElement{
+public:
+    virtual void accept(Visitor* visitor) = 0;
+};
+
+class ParkA : public ParkElement{
+public:
+    virtual void accept(Visitor* visitor){
+        visitor->visit(this);//公园接受访问者访问，让访问者坐操作。
+    }
+};
+
+class ParkB : public ParkElement{
+public:
+    virtual void accept(Visitor* visitor){
+        visitor->visit(this);//公园接受访问者访问，让访问者坐操作。
+    }
+};
+
+class Park : public ParkElement{
+public:
+    Park(){
+        m_list.clear();
+    }
+
+    void setParkElement(ParkElement* pe){
+        m_list.push_back(pe);
+    }
+
+    virtual void accept(Visitor* visitor){
+        for(list<ParkElement*>::iterator it = m_list.begin();it != m_list.end();it++){
+            (*it)->accept(visitor);
+        }
+    }
+
+private:
+    list<ParkElement*> m_list;//公园的每一部分，让公园的每部分，管理者都可以访问
+};
+
+class VisitorA : public Visitor{
+public:
+    virtual void visit(ParkElement* parkmlement){
+        cout<<"visitorA clear ParkA."<<endl;
+    }
+};
+
+class VisitorB : public Visitor{
+public:
+    virtual void visit(ParkElement* parkmlement){
+        cout<<"visitorB clear ParkB."<<endl;
+    }
+};
+
+class ManagerVisitor : public Visitor{
+    virtual void visit(ParkElement* parkmlement){
+        cout<<"Manager can watch all the Park. "<<endl;
+    }
+};
+
+
+
+void main1(){
+    Visitor* visitorA = new VisitorA;
+    Visitor* visitorB = new VisitorB;
+
+    ParkElement* parkA = new ParkA;
+    ParkElement* parkB = new ParkB;
+
+    parkA->accept(visitorA);
+    parkB->accept(visitorB);
+
+    delete visitorA;
+    delete visitorB;
+    delete parkA;
+    delete parkB;
+}
+
+void main2(){
+
+    ManagerVisitor* managerVisitor = new ManagerVisitor;
+    Park* park = new Park;
+    ParkElement* parkA = new ParkA;
+    ParkElement* parkB = new ParkB;
+
+    park->setParkElement(parkA);
+    park->setParkElement(parkB);
+
+    park->accept(managerVisitor);
+
+    //整个公园接受管理者访问
+    
+    delete park;
+    delete managerVisitor;
+    delete parkA;
+    delete parkB;
+    
+}
+
+
+int main(){
+
+    //main1();
+    main2();
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
