@@ -1,0 +1,120 @@
+#include<iostream>
+#include<string.h>
+#include<map>
+using namespace std;
+
+//行为型模式---->中介者模式
+//用一个中介对象，封装一些对象的交换，
+//各个对象不需要显示相互作用，实现松散的耦合，可以独立改变交换。
+class Person{};
+class Mediator{
+public:
+    void getParter(){
+        
+        if(pMan->getsex() == pWoman->getsex()){
+            cout<<"they are girls.\n";
+        }
+        else{
+            if(pMan->getcondi() == pWoman->getcondi()){
+                cout<<pMan->getname()<<" and "<<pWoman->getname()<<" are agree.\n";
+            }
+            else{
+                cout<<pMan->getname()<<" and "<<pWoman->getname()<<" are disagree.\n";
+            }
+        }
+        
+    }
+
+    void setMan(Person *man){
+        pMan = man;
+    }
+
+    void setWoman(Person *man){
+        pWoman = man;
+    }
+
+private:
+    Person* pMan;
+    Person* pWoman;
+};
+
+
+class Person{
+public:
+    Person(string name,int sex,int condi,Mediator* m){
+        m_sex = sex;
+        m_condi = condi;
+        m_name = name;
+        mediator = m;
+    }
+
+    int getcondi(){
+        return m_condi;
+    }
+
+    int getsex(){
+        return m_sex;
+    }
+
+    string getname(){
+        return m_name;
+    }
+
+    virtual void getParter(Person* p) = 0;
+
+protected:
+    string m_name;
+    int    m_sex;
+    int    m_condi;
+    Mediator* mediator;
+};
+
+class Woman : public Person{
+public:
+    Woman(string name,int sex,int condi,Mediator* m) : Person(name,sex,condi,m){
+
+    }
+
+    virtual void getParter(Person* p){
+       mediator->setMan(p);
+       mediator->setWoman(this);
+       mediator->getParter();//找对象
+    }
+
+};
+
+
+class Man : public Person{
+public:
+    Man(string name,int sex,int condi,Mediator* m) : Person(name,sex,condi,m){
+
+    }
+
+    virtual void getParter(Person* p){
+       mediator->setMan(this);
+       mediator->setWoman(p);
+       mediator->getParter();//找对象
+    }
+};
+
+
+
+
+int main1(){
+    
+    Mediator* mediator = new Mediator;
+    Person* xiaofan = new Woman("xiaofan",2,5,mediator);
+    Person* zhangsan = new Woman("zhangsan",1,4,mediator);
+    Person* lishi = new Woman("lishi",1,5,mediator);
+
+    xiaofan->getParter(zhangsan);
+    xiaofan->getParter(lishi);
+}
+
+
+
+int main(){
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
