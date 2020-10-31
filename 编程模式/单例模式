@@ -1,0 +1,47 @@
+#include<iostream>
+using namespace std;
+
+class Singelton{
+public:
+    Singelton(){
+        cout<<"create Singelton"<<endl;
+    }
+
+public:
+    static Singelton *getInstance(){
+        return m_pSl;
+    }
+
+    static Singelton *FreeInstance(){
+        if(m_pSl != NULL){
+            delete m_pSl;
+            m_pSl = NULL;
+        }
+    }
+
+private:
+    static Singelton *m_pSl;
+};
+
+//饿汉式
+Singelton* Singelton::m_pSl = new Singelton;
+
+void main1(){
+    Singelton *p1 = Singelton::getInstance();
+    Singelton *p2 = Singelton::getInstance();
+
+    if(p1 == p2){
+        cout<<"the same."<<endl;
+    }
+    else{
+        cout<<"different."<<endl;
+    }
+    Singelton::FreeInstance();
+}
+
+int main(){
+
+    main1();
+    cout<<"hello..."<<endl;
+    return 0;
+}
