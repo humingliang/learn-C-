@@ -1,0 +1,99 @@
+#include<iostream>
+#include<string.h>
+#include<map>
+using namespace std;
+
+//行为型模式---->责任链模式
+/*
+struct Teacher
+{
+    char name;
+    int age;
+    Teacher* next;
+};
+*/
+//造完车后需要把任务传递下去
+class CarHandle{
+public:
+    virtual void HandleCar() = 0;
+
+    CarHandle* setNextHandle(CarHandle* handle){
+        m_handle = handle;
+        return this->m_handle;
+    }
+
+protected:
+    CarHandle* m_handle;//下一个处理单元
+};
+
+class HeadCarhandle : public CarHandle{
+public:
+    virtual void HandleCar(){
+        cout<<"make car's head.\n";
+        //造完车头，任务传递给下一个
+        if(m_handle != NULL){
+            m_handle->HandleCar();
+        }
+    }
+};
+
+class BodyCarhandle : public CarHandle{
+public:
+    virtual void HandleCar(){
+        cout<<"make car's body.\n";
+        //造完车身，任务传递给下一个
+        if(m_handle != NULL){
+            m_handle->HandleCar();
+        }
+    }
+};
+
+class TailCarhandle : public CarHandle{
+public:
+    virtual void HandleCar(){
+        cout<<"make car's tail.\n";
+        //造完车尾，任务传递给下一个
+        if(m_handle != NULL){
+            m_handle->HandleCar();
+        }
+    }
+};
+
+
+
+
+
+int main(){
+    CarHandle* bodycarhandle = new BodyCarhandle;
+    CarHandle* headcarhandle = new HeadCarhandle;
+    CarHandle* tailcarhandle = new TailCarhandle;
+
+    //任务处理关系
+    /*
+    headcarhandle->setNextHandle(bodycarhandle);
+    bodycarhandle->setNextHandle(tailcarhandle);
+    tailcarhandle->setNextHandle(NULL);
+    */
+    headcarhandle->setNextHandle(tailcarhandle);
+    tailcarhandle->setNextHandle(bodycarhandle);
+    bodycarhandle->setNextHandle(NULL);
+
+
+
+    headcarhandle->HandleCar();
+
+    /*
+    //业务逻辑固定在客户端
+    headcarhandle->HandleCar();
+    bodycarhandle->HandleCar();
+    tailcarhandle->HandleCar();
+    */
+
+    delete headcarhandle;
+    delete bodycarhandle;
+    delete tailcarhandle;
+
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
