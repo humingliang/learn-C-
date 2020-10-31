@@ -1,0 +1,65 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//原型模式
+//一个复杂对象具有自我复制的功能，统一一套接口
+class Person{
+public:
+    virtual Person* clone() = 0;
+    virtual void    print() = 0;
+};
+
+class CppProgrammer : public Person{
+public:
+    CppProgrammer(){
+        this->m_age  = 20;
+        this->m_name = " ";
+        this->m_resum = "aaa";
+    }
+
+    CppProgrammer(string name,int age){
+        this->m_age  = age;
+        this->m_name = name;
+        this->m_resum = "aaa";
+        setResum("aaaa");
+    }
+
+    virtual Person* clone(){
+        CppProgrammer* tmp = new CppProgrammer;
+        *tmp = *this;  //默认=为浅拷贝
+        return tmp;
+    }
+
+    virtual void print(){
+        cout<<"m_name:"<<m_name<<endl;
+        cout<<"m_age:"<<m_age<<endl;
+        cout<<"m_resum:"<<m_resum<<endl;
+    }
+
+    void setResum(char *p){
+        if(m_resum == NULL){
+            delete m_resum;
+        }
+        m_resum = new char[strlen(p)+1];
+        strcpy(m_resum,p);
+        
+    }
+private:
+    int    m_age;
+    string m_name;
+    char   *m_resum;
+};
+
+
+    
+int main(){
+    Person* c1 = new CppProgrammer("zhang_three",33);
+    c1->print();
+
+    Person* c2 = c1->clone();
+    c2->print();
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
