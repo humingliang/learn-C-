@@ -1,0 +1,143 @@
+#include<iostream>
+#include<string.h>
+#include<list>
+using namespace std;
+
+//行为型模式---->备忘录者模式
+//Caretaker 管理者
+//MememTo   备忘录
+
+class MememTo{
+public:
+    MememTo(string name,int age){
+        m_name = name;
+        m_age  = age;
+    }
+
+    string getName(){
+        return m_name;
+    }
+
+    int getAge(){
+        return m_age;
+    }
+
+    void setName(string name){
+        this->m_name = name;
+    }
+
+    void setAge(int age){
+        this->m_age = age;
+    }
+private:
+    string m_name;
+    int m_age;
+};
+
+class Person{
+public:
+    Person(string name,int age){
+        m_name = name;
+        m_age  = age;
+    }
+
+    string getName(){
+        return m_name;
+    }
+
+    int getAge(){
+        return m_age;
+    }
+
+    void setName(string name){
+        this->m_name = name;
+    }
+
+    void setAge(int age){
+        this->m_age = age;
+    }
+
+    //保存
+    MememTo* createMemeTo(){
+        return new MememTo(m_name,m_age);
+    }
+
+    //还原
+    void setMemeTo(MememTo* memeto){
+        this->m_age = memeto->getAge();
+        this->m_name = memeto->getName();
+    }
+    
+    void printT(){
+        cout<<"m_name: "<<m_name<<"m_age: "<<m_age<<endl;
+    }
+private:
+    string m_name;
+    int m_age;
+
+};
+
+class Caretaker{
+public:
+    Caretaker(MememTo* memeto){
+        this->m_memeto = memeto;
+    }
+
+    MememTo* getMemeto(){
+        return m_memeto;
+    }
+
+    void setMemeTo(MememTo* memeto){
+        this->m_memeto = memeto;
+    }
+private:
+    MememTo* m_memeto;
+};
+
+
+
+void main1(){
+    MememTo* memeto = NULL;
+    Person* p = new Person("zhangsan",35);
+    p->printT();
+    //创建Person的一个状态
+    printf("----------------\n");
+    memeto = p->createMemeTo();
+    p->setAge(42);
+    p->printT();
+
+    printf("old mode.--------\n");
+    p->setMemeTo(memeto);
+    p->printT();
+
+    delete p;
+    delete memeto;
+}
+
+void main2(){
+    //MememTo* memeto = NULL;
+    Caretaker* caretaker = NULL;
+    Person* p = new Person("zhangsan",35);
+    p->printT();
+    //创建Person的一个状态
+    printf("----------------\n");
+    caretaker = new Caretaker(p->createMemeTo());
+    p->setAge(42);
+    p->printT();
+
+    printf("old mode.--------\n");
+    p->setMemeTo(caretaker->getMemeto());
+    p->printT();
+
+    delete p;
+    delete caretaker;
+}
+
+int main(){
+
+    //main1();
+    main2();
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
