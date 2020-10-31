@@ -1,0 +1,151 @@
+#include<iostream>
+#include<string.h>
+#include<string>
+using namespace std;
+
+//建造者模式
+class House{
+public:
+    void setWall(string m_wall){
+        this->m_wall = m_wall;
+    }
+
+    void setDoor(string m_door){
+        this->m_door = m_door;
+    }
+
+    void setWindow(string m_window){
+       this->m_window = m_window;
+    }
+
+    string getWall(){
+        cout<<m_wall<<endl;
+        return this->m_wall;
+    }
+
+    string getDoor(){
+        cout<<m_door<<endl;
+        return this->m_door;
+    }
+
+    string getWindow(){
+        cout<<m_window<<endl;
+        return this->m_window;
+    }
+
+private:
+    string m_wall;
+    string m_door;
+    string m_window;
+};
+
+
+//工程队/干具体的活
+class Builder{
+public:
+    virtual void   buildWall() = 0;
+    virtual void   buildDoor() = 0;
+    virtual void   buildWind() = 0;
+    virtual House* getHouse()  = 0;
+};
+
+//公寓工程队
+class FlatBuilder : public Builder{
+public:
+    FlatBuilder(){
+        m_house = new House;
+    }
+
+    virtual void   buildWall(){
+        m_house->setWall("flat wall");
+    }
+    virtual void   buildDoor(){
+        m_house->setDoor("flat door");
+    }
+    virtual void   buildWind(){
+        m_house->setWindow("flat window");
+    }
+    virtual House* getHouse(){
+        return m_house;
+    }
+
+private:
+    House* m_house;
+};
+
+//别墅工程队
+class VillaBuilder : public Builder{
+public:
+    VillaBuilder(){
+        m_house = new House;
+    }
+
+    virtual void   buildWall(){
+        m_house->setWall("Villa wall");
+    }
+    virtual void   buildDoor(){
+        m_house->setDoor("Villa door");
+    }
+    virtual void   buildWind(){
+        m_house->setWindow("Villa window");
+    }
+    virtual House* getHouse(){
+        return m_house;
+    }
+
+private:
+    House* m_house;
+};
+
+//指挥者/负责建造逻辑
+class Director{
+public:
+    Director(Builder* build){
+        m_build = build;
+    }
+
+    void Construct(){
+        m_build->buildWall();
+        m_build->buildWind();
+        m_build->buildDoor();
+    }
+
+
+private:
+    Builder* m_build;
+};
+
+int main(){
+    House*    house      = NULL;
+    Builder*  builder    = NULL;
+    Director* directer   = NULL;
+    //请一个工程队
+    builder  = new VillaBuilder;
+    //设计师指挥
+    directer = new Director(builder);
+    directer->Construct();
+    house = builder->getHouse();
+    house->getDoor();
+    house->getWall();
+
+    delete house;
+    delete builder;
+    delete directer;
+
+    //请一个工程队
+    builder  = new FlatBuilder;
+    //设计师指挥
+    directer = new Director(builder);
+    directer->Construct();
+    house = builder->getHouse();
+    house->getDoor();
+    house->getWall();
+
+    delete house;
+    delete builder;
+    delete directer;
+
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
