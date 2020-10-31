@@ -1,0 +1,71 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//结构型模式---->装饰模式
+//动态给对象添加一些额外的功能，生成子类也比较灵活
+class Car{
+public:
+    virtual void show() = 0;
+};
+
+class RunCar : public Car{
+public:
+    virtual void show(){
+        cout<<"can run.\n";
+    }
+};
+
+class SwimCarDirect : public Car{
+public:
+    SwimCarDirect(Car* car){
+        m_car = car;
+    }
+
+    virtual void show(){
+        m_car->show();
+        Swim();
+        
+    }
+
+    void Swim(){
+        cout<<"Can swim.\n";
+    }
+
+private:
+    Car* m_car;
+};
+
+class FlyCarDirect : public Car{
+public:
+    FlyCarDirect(Car* car){
+        m_car = car;
+    }
+
+    virtual void show(){
+        m_car->show();
+        Fly();
+    }
+
+    void Fly(){
+        cout<<"Can Fly.\n";
+    }
+
+private:
+    Car* m_car;
+};
+
+int main(){
+    Car* mycar = NULL;
+    mycar = new RunCar;
+    mycar->show();
+    cout<<".............aaa\n";
+    FlyCarDirect *flycar = new FlyCarDirect(mycar);
+    flycar->show();
+    cout<<".............bbb\n";
+    SwimCarDirect *swimCar = new SwimCarDirect(flycar);
+    swimCar->show();
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
