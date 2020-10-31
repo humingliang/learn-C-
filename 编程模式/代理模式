@@ -1,0 +1,46 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+//结构型模式---->代理模式
+//a中包含b类，a，b共同实现一个协议
+class Subject{
+public:
+    virtual void sailbook() = 0;
+};
+
+class RealSubjectBook:public Subject{
+public:
+    virtual void sailbook(){
+        cout<<"sail books.\n";
+    }
+};
+
+class dangdangProxy : public Subject{
+public:
+    virtual void sailbook(){
+        RealSubjectBook *rsb = new RealSubjectBook;
+        discount();
+        rsb->sailbook();
+        discount();
+    }
+
+public:
+    void discount(){
+        cout<<"this is double eleven.\n";
+    }
+private:
+    Subject* m_subject;
+};
+
+
+
+    
+int main(){
+    Subject* s = new dangdangProxy;
+    s->sailbook();
+    delete s;
+
+    cout<<"hello..."<<endl;
+    return 0;
+}
